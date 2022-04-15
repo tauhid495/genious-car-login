@@ -17,9 +17,9 @@ import RequireAuth from './pages/Login/RequireAuth';
 function App() {
   return (
     <div className=" ">
-      <Header />
+      <Header className='order-1' />
 
-      <Routes>
+      <Routes order-last>
         <Route path='/' element={<Home />}></Route>
         <Route path='/home' element={<Home />}></Route>
         <Route path='/service/:serviceId' element={<ServiceDetail />}></Route>

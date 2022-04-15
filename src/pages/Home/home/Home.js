@@ -4,7 +4,7 @@ import Services from '../services/Services';
 
 const Home = () => {
     return (
-        <div>
+        <div className='order-lase'>
             <NewCarousel /> <br />
             <Services /> <br />
             <div id='newcarosel'>

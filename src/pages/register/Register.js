@@ -1,11 +1,13 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { Button, Form } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
-import { useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth';
+import { useCreateUserWithEmailAndPassword, useUpdateProfile } from 'react-firebase-hooks/auth';
 import auth from '../../firebase.init'
+import SocialLogin from '../Login/SocialLogin';
 
 const Register = () => {
 
+const [agree, setAgree]=useState(false);
 
     const nameRef = useRef('');
     const emailRef = useRef('');
@@ -17,24 +19,27 @@ const Register = () => {
         user,
         loading,
         error,
-    ] = useCreateUserWithEmailAndPassword(auth);
+    ] = useCreateUserWithEmailAndPassword(auth, {sendEmailVerification:true});
+    const [updateProfile, updating, nameerror] = useUpdateProfile(auth);
 
     const navigate = useNavigate();
 
 
-    if (user){
-        navigate('/home');
+    if (user) {
+        console.log('user', user);
     }
 
-    const handleSubmit = event => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
         const name = nameRef.current.value;
         const email = emailRef.current.value;
         const passWord = passWordRef.current.value;
 
         // console.log(name, email, passWord);
-        createUserWithEmailAndPassword(email,passWord);
-
+        
+        await createUserWithEmailAndPassword(email, passWord);
+        await updateProfile({ displayName : name });
+          alert('Updated profile');
     }
 
 
@@ -42,7 +47,7 @@ const Register = () => {
         <div className='mt-5 container w-50 mx-auto'>
             <div className='border rounded-3 p-5 shadow'>
                 <h2 className='text-primary text-center'>Please Register</h2>
-                <Form onClick={handleSubmit}>
+                <Form  >
                     <Form.Group className="mb-3" controlId="formBasicEmail">
                         <Form.Label>Your Name</Form.Label>
                         <Form.Control ref={nameRef} type="text" placeholder="Enter Your Name" required />
@@ -62,13 +67,16 @@ const Register = () => {
                         <Form.Label>Password</Form.Label>
                         <Form.Control ref={passWordRef} type="password" placeholder="Password" required />
                     </Form.Group>
-                    <Form.Group className="mb-3" controlId="formBasicCheckbox">
-                        <Form.Check type="checkbox" label="Check me out" />
+                    <Form.Group onClick={()=>setAgree(!agree)} className="mb-3" controlId="formBasicCheckbox">
+                        <Form.Check className={agree? 'ps-2 text-primary' : 'ps-2 text-danger'} type="checkbox" label="Agree with Genious Cars terms and conditions" />
                     </Form.Group>
-                    <Button className='' variant="primary" type="submit">
+                    <Button onClick={handleSubmit} className='' variant="primary" type="submit">
                         Submit
                     </Button>
+                    
                     <p>Already have an account? <Link to='/login' className='text-danger pe-auto text-decoration-none' >Please Login</Link > </p>
+
+                    <SocialLogin />
                 </Form>
             </div>
         </div>

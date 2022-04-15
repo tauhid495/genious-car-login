@@ -9,7 +9,7 @@ const firebaseConfig = {
   storageBucket: "genious-car-service-e28aa.appspot.com",
   messagingSenderId: "750330935146",
   appId: "1:750330935146:web:b2e53a15511844ba451713"
-  };
+};
 
 const app = initializeApp(firebaseConfig);
 
